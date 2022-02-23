@@ -16,12 +16,12 @@ io.on('connection', (socket) => {
        console.log(`User disconnected - Username: ${socket.username}`);
    });
  
-   socket.on('message to server', ({msg, userName}) => {
-       io.local.emit('message from server', `${userName} says ${msg}`);
+   socket.on('message to server', (messagePayload) => {
+       io.local.emit('message from server', messagePayload);
    });
  
    socket.on('new user', (userName) => {
        console.log(`User connected ${userName}`);
-       io.emit('message from server', `new user : hello to ${userName}!`);
+       io.emit('message from server', `${userName} Joined the chat 🐿️`);
    });
 });

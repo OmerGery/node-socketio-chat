@@ -25,22 +25,30 @@ title {
     <title>node chat</title>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      const handleMsg = (msg) => {
-          document.getElementById('messagesBox').textContent += `\n${msg}`;
+      const handleMsg = (msgPayload) => {
+        const newDiv = document.createElement("div");
+        const {userName, msg} = msgPayload;
+        const text = userName ? `${userName}: ${msg}` : msgPayload;
+        const newContent = document.createTextNode(text);
+        newDiv.appendChild(newContent);
+        const currentDiv = document.getElementById("div1");
+        document.body.insertBefore(newDiv, currentDiv);
       }
       const userName = prompt('Hi! Please enter your name :) ') || 'unkown';
       
       const socket = io();
       socket.emit('new user', userName);
 
-      socket.on('message from server',(msg) => handleMsg(msg));
+      socket.on('message from server',(msgPayload) => handleMsg(msgPayload));
     </script>
 
     <script>
       const handleSendMessage = () => {
         const msg = document.getElementById('messageBox').value;
+        if(msg){
         socket.emit('message to server' , {msg, userName});
         document.getElementById('messageBox').value = '';
+        }
       }
       const sendMsg = () => handleSendMessage();
     </script>
@@ -48,7 +56,6 @@ title {
 
     </script>
     <body>
-      <h4 id="messagesBox">messages: </h4>
       <div>
 
           <label for="fname">Enter a message </label>
