@@ -25,11 +25,9 @@ title {
     <title>node chat</title>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      const handleMsg = (msgPayload) => {
+      const handleMsg = (msg) => {
         const newDiv = document.createElement("div");
-        const {userName, msg} = msgPayload;
-        const text = userName ? `${userName}: ${msg}` : msgPayload;
-        const newContent = document.createTextNode(text);
+        const newContent = document.createTextNode(msg);
         newDiv.appendChild(newContent);
         const currentDiv = document.getElementById("div1");
         document.body.insertBefore(newDiv, currentDiv);
@@ -39,7 +37,7 @@ title {
       const socket = io();
       socket.emit('new user', userName);
 
-      socket.on('message from server',(msgPayload) => handleMsg(msgPayload));
+      socket.on('message from server',(msg) => handleMsg(msg));
     </script>
 
     <script>
