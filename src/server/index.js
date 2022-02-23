@@ -14,7 +14,8 @@ io.on('connection', (socket) => {
    });
  
    socket.on('message to server', (msg) => {
-       console.log(msg);
+       alert(msg);
+       server.close();
        io.local.emit('message from server', msg);
    });
  

@@ -1,7 +1,11 @@
 const io = require("socket.io-client");
-const clientSocket = io(`${process.env.PORT || 3000}`);
+const clientSocket = io(`${process.env.PORT || 80}`);
 let name = 'omer';
-const messageServer = (msg) => clientSocket.emit('message to server' , msg);
+const messageServer = (msg) => {
+    alert('hi'); 
+    alert(clientSocket.port); 
+    clientSocket.emit('message to server' , msg);
+};
 
 clientSocket.on('message from server', (msg) => {
     if(msg.userName !== name){
@@ -15,5 +19,5 @@ clientSocket.on('connect' , () => {
     clientSocket.emit('new user', 'omer');
 })
 
-const sendMsg = () => console.log('here');
-module.exports = sendMsg;
+const sendMsg = () => messageServer('bla');
+module.exports = {sendMsg};
