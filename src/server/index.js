@@ -7,7 +7,7 @@ server.listen(PORT, () => {
    console.log(`Server is running on port: ${PORT}`);
 });
 app.get('/', (req,res) => {
-    res.sendFile('page.html', {root: './client'});
+    res.sendFile('page.html', {root: './src/client'});
 })
  
 io.on('connection', (socket) => {
