@@ -16,10 +16,8 @@ io.on('connection', (socket) => {
        console.log(`User disconnected - Username: ${socket.username}`);
    });
  
-   socket.on('message to server', (msg) => {
-       alert(msg);
-       server.close();
-       io.local.emit('message from server', msg);
+   socket.on('message to server', ({msg, userName}) => {
+       io.local.emit('message from server', `${userName} says ${msg}`);
    });
  
    socket.on('new user', (userName) => {
