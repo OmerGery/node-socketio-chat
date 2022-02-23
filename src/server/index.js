@@ -1,10 +1,10 @@
-const moment = require('moment');
+const moment = require('moment-timezone');
 
 const app = require('express')();
 const server = require('http').createServer(app)
 const io = require('socket.io')(server);
 const PORT = process.env.PORT || 80;
-const getTimeNow = () => `[${moment().format('HH:mm:ss')}]`;
+const getTimeNow = () => `[${moment().tz('Asia/Jerusalem').format('HH:mm:ss')}]`;
 server.listen(PORT, () => {
    console.log(`Server is running on port: ${PORT}`);
 });
