@@ -1,27 +1,41 @@
-const moment = require('moment-timezone');
+const express = require("express");
+const http = require("http");
 
-const app = require('express')();
-const server = require('http').createServer(app)
-const io = require('socket.io')(server);
-const PORT = process.env.PORT || 80;
-const getTimeNow = () => `[${moment().tz('Asia/Jerusalem').format('HH:mm:ss')}]`;
-server.listen(PORT, () => {
-   console.log(`Server is running on port: ${PORT}`);
+const cors = require('cors');
+const port = process.env.PORT || 4001;
+const app = express();
+app.use(cors())
+const server = http.createServer(app);
+const io = require('socket.io')(server, {
+    cors: {
+      origin: '*',
+    }
+  });
+
+
+let interval;
+
+io.on("connection", (socket) => {
+  console.log("New client connected");
+  if (interval) {
+    clearInterval(interval);
+  }
+  interval = setInterval(() => getApiAndEmit(socket), 1000);
+  
+  socket.on("disconnect", () => {
+    console.log("Client disconnected");
+    clearInterval(interval);
+  });
+  socket.on("clientMsg", (msg) => {
+    console.log('client sent ');
+    console.log(msg);
+  });
 });
 
-io.on('connection', (socket) => {
- 
-   socket.on('disconnect', () => {
-       console.log(`User disconnected - Username: ${socket.username}`);
-   });
+const getApiAndEmit = socket => {
+  const response = new Date();
+  // Emitting a new message. Will be consumed by the client
+  socket.emit("FromAPI", response);
+};
 
- 
-   socket.on('message to server', ({userName, msg}) => {
-       io.local.emit('message from server',`${getTimeNow()} ${userName} : ${msg} `);
-   });
- 
-   socket.on('new user', (userName) => {
-       console.log(`User connected ${userName}`);
-       io.emit('message from server', `${getTimeNow()} ${userName} Joined the chat 🐿️`);
-   });
-});
+server.listen(port, () => console.log(`Listening on port ${port}`));
